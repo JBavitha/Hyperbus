@@ -1,98 +1,73 @@
-# Hyperbus
-Test Plan for AXI-HyperBus Bridge Verification
+### Test Plan for AXI-HyperBus Bridge Verification
 
-1. Introduction
-This test plan outlines the verification strategy for the AXI-HyperBus bridge module.
-The bridge converts AXI transactions to HyperBus transactions.
-The primary objectives are:
--- Ensuring correct AXI4 slave interface functionality.
+1. Overview
 
--- Ensuring correct HyperBus master interface functionality.
+This test plan outlines the verification strategy for the AXI-HyperBus Bridge, ensuring that the AXI slave interface correctly translates transactions to the HyperBus master interface.
 
--- Validating state machine transitions and responses.
+2. Verification Objectives
 
--- Evaluating corner cases and error scenarios.
+- Validate AXI write transactions.
 
-2. Testbench Architecture
-The testbench follows a self-checking methodology using a Verilog-based testbench with stimulus generation and output checking.
+- Validate AXI read transactions.
 
-DUT: axi_hyperbus_bridge
+- Verify correct data transfer to/from HyperBus.
 
-Clock & Reset Generator: Generates aclk and aresetn.
+- Test error handling and edge cases.
 
-AXI Driver: Sends read/write requests to the DUT.
+- Validate reset behavior.
 
-HyperBus Monitor: Captures responses from the HyperBus interface.
+- Ensure protocol timing constraints are met.
 
-Scoreboard: Compares expected vs. actual results.
+3. Test Scenarios
 
-Assertions: Checks protocol compliance.
+3.1 Reset Functionality
 
-3. Test Cases
+- Assert reset (aresetn = 0), ensure all signals initialize correctly.
 
-3.1 Basic Functionality Tests
+- Deassert reset (aresetn = 1), ensure normal operation resumes.
 
-Test 1: AXI Write Transaction to HyperBus Write
+3.2 Write Transaction
 
-Drive an AXI write transaction (awaddr, wdata, awvalid, wvalid).
+- Issue write address (awaddr) and data (wdata), set awvalid and wvalid.
 
-Check if awready and wready are asserted correctly.
+- Check that awready and wready are asserted.
 
-Validate bvalid response after writing.
+- Ensure bvalid is asserted, indicating write completion.
 
-Verify the corresponding HyperBus signals (hyper_addr, hyper_we_n).
+- Check if hyper_addr, hyper_dq, and hyper_we_n match expected values.
 
-Test 2: AXI Read Transaction to HyperBus Read
+3.3 Read Transaction
 
-Send an AXI read request (araddr, arvalid).
+- Issue read address (araddr), set arvalid.
 
-Check if arready is asserted.
+- Check that arready is asserted.
 
-Verify rvalid and rdata match expected values.
+- Verify rvalid assertion and data availability on rdata.
 
-Validate hyper_re_n behavior.
+- Ensure correct HyperBus signals are toggled (hyper_addr, hyper_re_n).
 
-3.2 Edge Case & Stress Tests
+3.4 Back-to-Back Transactions
 
-Test 3: Back-to-Back AXI Transactions
+- Perform multiple read/write operations without waiting for the previous to complete.
 
-Perform multiple consecutive writes and reads.
+- Ensure bridge maintains proper transaction order and data integrity.
 
-Verify that responses are received correctly and in order.
+3.5 Error Handling
 
-Test 4: Reset Behavior
+- Simulate timeout scenarios where HyperBus does not respond.
 
-Assert aresetn in different states.
+- Test AXI protocol violations (e.g., premature deassertion of awvalid).
 
-Ensure that the DUT returns to the IDLE state after reset.
+- Verify that invalid reads/writes return appropriate responses.
 
-Test 5: AXI Handshake Violations
+4. Expected Results
 
-Deassert awvalid, arvalid, or wvalid before handshake completion.
+- AXI transactions should successfully map to HyperBus operations.
 
-Validate that the DUT does not enter an incorrect state.
+- Data written should be correctly retrieved on a subsequent read.
 
-Test 6: HyperBus Timing Checks
+Reset should properly clear internal states.
 
-Introduce clock skews and delays in HyperBus signals.
+The bridge should handle error conditions gracefully.
 
-Monitor if data integrity is maintained.
-
-4. Coverage Metrics
-
-Code Coverage: Ensure all states and transitions are exercised.
-
-Functional Coverage: Ensure all valid AXI-HyperBus transactions are covered.
-
-Assertions: Check for protocol compliance on AXI and HyperBus interfaces.
-
-5. Pass/Fail Criteria
-
-All functional and edge test cases must pass.
-
-No assertion failures should occur.
-
-All coverage goals should be met.
-
-This test plan ensures a robust verification of the AXI-HyperBus bridge, covering functional correctness and edge-case scenarios.
-
+5. Testbench Features
