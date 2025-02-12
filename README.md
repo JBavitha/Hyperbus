@@ -1,10 +1,10 @@
 ### Test Plan for AXI-HyperBus Bridge Verification
 
-1. Overview
+**1. Overview**
 
 This test plan outlines the verification strategy for the AXI-HyperBus Bridge, ensuring that the AXI slave interface correctly translates transactions to the HyperBus master interface.
 
-2. Verification Objectives
+**2. Verification Objectives**
 
 - Validate AXI write transactions.
 
@@ -18,7 +18,8 @@ This test plan outlines the verification strategy for the AXI-HyperBus Bridge, e
 
 - Ensure protocol timing constraints are met.
 
-3. Test Scenarios
+
+**3. Test Scenarios**
 
 3.1 Reset Functionality
 
@@ -66,22 +67,57 @@ This test plan outlines the verification strategy for the AXI-HyperBus Bridge, e
 
 - Data written should be correctly retrieved on a subsequent read.
 
-Reset should properly clear internal states.
+- Reset should properly clear internal states.
 
-The bridge should handle error conditions gracefully.
-
-5. Testbench Features
+- The bridge should handle error conditions gracefully.
 
 
 
+# AXI-HyperBus Bridge Module Documentation
+
+- The axi_hyperbus_bridge module serves as a bridge between an AXI4 interface and a HyperBus memory interface. It allows an AXI4 master to perform read and write operations on a HyperBus memory device.
+
+![image](https://github.com/user-attachments/assets/6c1b7e2e-5d26-49de-8700-d078b76dc8b1)
+
+![image](https://github.com/user-attachments/assets/486b52af-d960-4f9e-a276-608a0c48bd85)
+
+# AXI-HyperBus Bridge Testbench
+
+- The testbench axi_hyperbus_tb verifies the AXI-HyperBus bridge functionality by simulating AXI read and write transactions and checking the corresponding HyperBus operations.
+
+![image](https://github.com/user-attachments/assets/9729c5d2-0888-46d3-8d41-72a0ca9b81cc)
+
+#### Simulation Flow
+
+**Initialization:**
+
+- Reset is asserted.
+
+- Clock is generated.
+
+**AXI Write Transaction:**
+
+- Write address and data are presented.
+
+- Wait for AXI handshake.
+
+- Monitor HyperBus signals for correctness.
+
+**AXI Read Transaction:**
+
+- Read address is presented.
+
+- Wait for read data.
+
+- Monitor response and data integrity.
+
+- Simulation Completion:
+
+- Testbench runs for a fixed time and finishes execution.
+.
 
 
 
-### AXI INterface (slave)
-
-![image](https://github.com/user-attachments/assets/99c4545c-821c-49cb-9bc7-3bad47a66742)
-
-![image](https://github.com/user-attachments/assets/9a73a77b-05ac-44b7-974d-7b57a96dba86)
 
 1. Write Transaction Flow (AXI to HyperBus)
 
