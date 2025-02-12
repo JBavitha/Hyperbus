@@ -71,3 +71,27 @@ Reset should properly clear internal states.
 The bridge should handle error conditions gracefully.
 
 5. Testbench Features
+
+
+
+
+
+
+### AXI INterface (slave)
+
+![image](https://github.com/user-attachments/assets/99c4545c-821c-49cb-9bc7-3bad47a66742)
+
+![image](https://github.com/user-attachments/assets/9a73a77b-05ac-44b7-974d-7b57a96dba86)
+
+1. Write Transaction Flow (AXI to HyperBus)
+
+- AXI master sends awaddr → bridge asserts awready
+- AXI master sends wdata → bridge asserts wready
+- Bridge converts AXI signals to hyper_addr, hyper_we_n, and hyper_dq
+- bvalid is asserted when the write completes
+
+2. Read Transaction Flow (AXI to HyperBus)
+
+- AXI master sends araddr → bridge asserts arready
+- Bridge asserts hyper_re_n and places read data onto hyper_dq
+- rvalid is asserted when rdata is ready
